@@ -15,6 +15,20 @@
             align-items: flex-end;
             min-height: 100vh;
         }
+        #src {
+            text-decoration: none;
+            color: inherit;
+            opacity: 0.5;
+            transition: opacity 200ms;
+        }
+        #src:is(:hover, :focus-visible) {
+            opacity: 1;
+        }
+        #src code {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            font: inherit;
+        }
     </style>
 </head>
 <body>
@@ -37,8 +51,12 @@
             <li><a href="https://matrix.to/#/@chfour:eeep.ee">matrix</a></li>
             <li><a href="discord.html">discord</a></li>
             <li><a href="https://files.eeep.ee/">file dump</a></li>
-            <li><a href="https://github.com/chfour/website3">website source</a></li>
         </ul>
+        <p>
+            <a id="src" href="https://github.com/chfour/website3" aria-label="website source" title="website source">
+                <code>{{placeholder "http.vars.websitePath"}}</code>
+            </a>
+        </p>
     </article>
 </body>
 </html>

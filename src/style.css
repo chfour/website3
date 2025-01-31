@@ -23,10 +23,10 @@ body {
     color: black;
     font-family: 'Inter', sans-serif;
     font-optical-sizing: auto;
+    margin: 0;
 }
 
 article {
-    /* max-width: 30em; */
     margin: 3rem;
 }
 
