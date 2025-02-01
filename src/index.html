@@ -26,9 +26,10 @@
         }
         #src code {
             white-space: normal;
-            overflow-wrap: anywhere;
+            word-break: break-all;
             font: inherit;
         }
+        #timenow { font-feature-settings: "tnum"; }
     </style>
 </head>
 <body>
@@ -36,14 +37,14 @@
     <article>
         <img src="platinum_fop_45_o.svg" alt="" width="250" height="250" style="margin-block: 2em; max-width: 100%; height: auto;">
         <p>from PCBs to webdev: jack of Too Many trades, master of none</p>
-        <p>(linux stuff, nix, c, python, shell, html+css+js...)</p>
+        <p>(linux stuff, nix, c, python, html+css+js, AVRs...)</p>
         <p>+ trains, very amateur photography, and radio</p>
-        <p>high ambitions, low energy, hoarder of assorted junk</p>
+        <p>high ambitions, low energy, hoarder of junk</p>
         <p>exceptionally uncreative</p>
         <p>gender outage (any pronouns)</p>
         <p>furry, &Theta;&Delta; [platinum] fox</p>
         <p>18 years old and counting</p>
-        <p>from Upper Silesia, Poland</p>
+        <p>from Upper Silesia, Poland<span id="timenow"></span></p>
         <ul class="inline-list">
             <li style="display: block;">known as <b>chfour</b></li>
             <li><a rel="me" href="https://wetdry.world/@chfour">fediverse</a></li>
@@ -54,9 +55,18 @@
         </ul>
         <p>
             <a id="src" href="https://github.com/chfour/website3" aria-label="website source" title="website source">
-                <code>{{placeholder "http.vars.websitePath"}}</code>
+                <code>/nix/store/VERY5p3c14lsecretv4luereplaceme0-chfour-website</code>
             </a>
         </p>
     </article>
+    <script>
+        const timenow = document.getElementById("timenow");
+        const formatter = new Intl.DateTimeFormat("pl-PL", {timeZone: "Europe/Warsaw", timeStyle: "short"});
+        const update = () => {
+            timenow.textContent = ` (${formatter.format(new Date())}\u00a0right\u00a0now)`;
+            window.requestAnimationFrame(update);
+        }
+        update();
+    </script>
 </body>
 </html>
