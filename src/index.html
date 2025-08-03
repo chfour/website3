@@ -6,52 +6,109 @@
     <title>website of chfour official website</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        img { filter: drop-shadow(0 0 5px #ccc); }
+        #fops {
+            height: auto;
+            max-width: 100%;
+            margin-block: 2em;
+            filter: drop-shadow(0 0 5px #ccc);
+        }
         @media (prefers-color-scheme: dark) {
-            img { filter: drop-shadow(0 0 5px #f2f2f277); }
+            #fops { filter: drop-shadow(0 0 5px #f2f2f277); }
         }
         :root {
             display: flex;
             align-items: flex-end;
             min-height: 100vh;
         }
-        #src {
+        body { line-height: initial; }
+
+        #timenow { font-feature-settings: "tnum"; }
+
+        footer a {
             text-decoration: none;
-            color: inherit;
-            opacity: 0.5;
+            color: inherit !important;
+            opacity: 0.7;
             transition: opacity 200ms;
         }
-        #src:is(:hover, :focus-visible) {
+        footer a:is(:hover, :focus-visible) {
             opacity: 1;
         }
-        #src code {
+        footer a code {
             white-space: normal;
             word-break: break-all;
             font: inherit;
         }
-        #timenow { font-feature-settings: "tnum"; }
+
+        #links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+        }
+        #links > * > div {
+            display: inline-flex;
+            flex-direction: column;
+        }
+        #links > * > div > * { width: max-content; }
+        #links a { font-weight: bold; }
+        #links > * > div > :nth-child(2) { font-size: 0.8em; }
     </style>
 </head>
 <body>
     <article>
-        <img src="platinum_fop_45_o.svg" alt="" width="250" height="250" style="margin-block: 2em; max-width: 100%; height: auto;">
-        <p>from PCBs to webdev: jack of Too Many trades, master of none</p>
-        <p>(linux stuff, nix, c, python, html+css+js, AVRs...)</p>
-        <p>+ trains, very amateur photography, and radio</p>
-        <p>high ambitions, low energy, hoarder of junk</p>
-        <p>exceptionally uncreative</p>
-        <p>gender outage (any pronouns)</p>
-        <p>furry, &Theta;&Delta; [platinum] fox</p>
-        <p>19 years old and counting</p>
-        <p>from Silesia, Poland<span id="timenow"></span></p>
-        <ul class="inline-list">
-            <li style="display: block;">known as <b>chfour</b></li>
-            <li><a rel="me" href="https://wetdry.world/@chfour">fediverse</a></li>
-            <li><a href="https://github.com/chfour">github</a></li>
-            <li><a href="https://matrix.to/#/@chfour:eeep.ee">matrix</a></li>
-            <li><a href="discord.html">discord</a></li>
-            <li><a href="https://files.eeep.ee/">file dump</a></li>
-        </ul>
+        <img id="fops" src="platinum_fop_45_o.svg" alt="" width="250" height="250">
+        <main>
+            <ul class="inline-list slashed" style="max-width: 30rem; line-height: 1.5; text-align: justify;">
+                <li>Linux, Nix & NixOS</li>
+                <li>C, Python, HTML+CSS and co</li>
+                <li>electronics, "embedded" & test gear</li>
+                <li>RF (incl. amateur radio)</li>
+                <li>time and frequency metrology</li>
+                <li>trains and almost everything surrounding trains</li>
+                <li>very amateur photography</li>
+            </ul>
+
+            <p>high ambitions, low energy, hoarder of junk</p>
+            <p>exceptionally uncreative</p>
+            <p>gender outage (any pronouns). some flavor of queer. taken <3</p>
+            <p>&Theta;&Delta; [platinum]&nbsp;fox, furry</p>
+            <p>19 years old and counting</p>
+            <p>from Silesia, Poland<span id="timenow"></span></p>
+
+            <p>known as <b>chfour</b></p>
+
+            <ul class="inline-list" id="links">
+                <li>
+                    <div>
+                        <a rel="me" href="https://wetdry.world/@chfour">fediverse</a>
+                        <span>@chfour@wetdry.world</span>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="https://signal.me/#eu/uwW5t81nJulRdHjWEkNUE2omPv9HzXhzUzar2yvP14ULx50MgdZBwpxrhWX3RfA3">signal</a>
+                        <span>chfour.32</span>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="discord.html">discord</a>
+                        <span>ch4</span>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="https://github.com/chfour" title="chfour">github</a>
+                        <span>chfour</span>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <a href="https://files.eeep.ee/">file dump</a>
+                        <span>files.eeep.ee</span>
+                    </div>
+                </li>
+            </ul>
+        </main>
         <footer>
             <a id="src" href="https://github.com/chfour/website3" aria-label="website source" title="website source">
                 <code>/nix/store/VERY5p3c14lsecretv4luereplaceme0-chfour-website</code>
@@ -63,9 +120,7 @@
         const formatter = new Intl.DateTimeFormat("pl-PL", {timeZone: "Europe/Warsaw", timeStyle: "short"});
         // won't be *totally perfectly exact*
         // but with window.requestAnimationFrame() it made my cpu usage go up by some 10% no joke
-        const update = () => {
-            timenow.textContent = ` (${formatter.format(new Date())}\u00a0right\u00a0now)`;
-        }
+        const update = () => timenow.textContent = ` (${formatter.format(new Date())})`;
         update(); setInterval(update, 5000);
     </script>
 </body>
