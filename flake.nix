@@ -52,7 +52,7 @@
               "U+015A" "U+0179" "U+017B" "U+0105" "U+0107" "U+0119"
               "U+0142" "U+0144" "U+00F3" "U+015B" "U+017A" "U+017C"
             ];
-            extraArgs = [ "--layout-features+=cv10,cv02,zero,tnum" ];
+            extraArgs = [ "--layout-features+=cv10,zero,tnum" ];
           };
 
           packages.website-fonts = pkgs.stdenvNoCC.mkDerivation {
