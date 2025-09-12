@@ -43,21 +43,27 @@
             display: flex;
             flex-wrap: wrap;
             gap: 1em;
+            max-width: 30rem;
         }
         #links > * > div {
             display: inline-flex;
             flex-direction: column;
         }
         #links > * > div > * { width: max-content; }
-        #links a { font-weight: bold; }
+        #links a {
+            font-weight: bold;
+            text-decoration: none;
+        }
         #links > * > div > :nth-child(2) { font-size: 0.8em; }
     </style>
+
+    <link rel="me" href="https://wetdry.world/@chfour"> <!-- old fedi acc -->
 </head>
 <body>
     <article>
         <img id="fops" src="platinum_fop_45_o.svg" alt="" width="250" height="250">
         <main>
-            <ul class="inline-list slashed" style="max-width: 30rem; line-height: 1.5; text-align: justify;">
+            <ul class="inline-list slashed" style="max-width: 30rem; line-height: 1.2; text-align: justify;">
                 <li>Linux, Nix & NixOS</li>
                 <li>C, Python, HTML+CSS and co</li>
                 <li>electronics, "embedded" & test gear</li>
@@ -77,36 +83,30 @@
             <p>known as <b>chfour</b></p>
 
             <ul class="inline-list" id="links">
-                <li>
-                    <div>
-                        <a rel="me" href="https://wetdry.world/@chfour">fediverse</a>
-                        <span>@chfour@wetdry.world</span>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <a href="https://signal.me/#eu/uwW5t81nJulRdHjWEkNUE2omPv9HzXhzUzar2yvP14ULx50MgdZBwpxrhWX3RfA3">signal</a>
-                        <span>chfour.32</span>
-                    </div>
-                </li>
-                <li>
-                    <div>
+                <li><div>
+                    <a rel="me" href="https://merping.synth.download/@chfour">fediverse</a>
+                    <span>@chfour@merping.synth.download</span>
+                </div></li>
+                <li><div>
+                    <a href="https://bsky.app/profile/eeep.ee">bluesky</a>
+                    <span>@eeep.ee (bridged)</span>
+                </div></li>
+                <li><div>
+                    <a href="https://signal.me/#eu/uwW5t81nJulRdHjWEkNUE2omPv9HzXhzUzar2yvP14ULx50MgdZBwpxrhWX3RfA3">signal</a>
+                    <span>chfour.32</span>
+                </div></li>
+                <li><div>
                         <a href="discord.html">discord</a>
                         <span>ch4</span>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <a href="https://github.com/chfour" title="chfour">github</a>
-                        <span>chfour</span>
-                    </div>
-                </li>
-                <li>
-                    <div>
-                        <a href="https://files.eeep.ee/">file dump</a>
-                        <span>files.eeep.ee</span>
-                    </div>
-                </li>
+                    </div></li>
+                <li><div>
+                    <a href="https://github.com/chfour">github</a>
+                    <span>chfour</span>
+                </div></li>
+                <li><div>
+                    <a href="https://files.eeep.ee/">file dumpster</a>
+                    <span>files.eeep.ee</span>
+                </div></li>
             </ul>
         </main>
         <footer>
