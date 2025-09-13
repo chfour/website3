@@ -18,11 +18,26 @@
 }
 /* todo: non-fast variants and generating this from the nix stuff too maybe lol */
 
-:root { color-scheme: light dark; }
+:root {
+    color-scheme: light dark;
+    --color-fg: #f2f2f2;
+    --color-bg: #000;
+    --color-link: #7d29e2;
+    --color-link-visited: #a800ad;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-bg: #1a1a1a;
+        --color-fg: #fff;
+        --color-link: #aaf;
+        --color-link-visited: #fbf;
+    }
+}
 
 body {
-    background-color: #f2f2f2;
-    color: black;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
 
     font-family: 'Inter', sans-serif;
     font-optical-sizing: auto;
@@ -36,17 +51,9 @@ article {
     margin: 3rem;
 }
 
-a { color: #7d29e2; }
-a:visited { color: #a800ad; }
+a { color: var(--color-link); }
+a:visited { color: var(--color-link-visited); }
 
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: #1a1a1a;
-        color: white;
-    }
-    a { color: #aaf; }
-    a:visited { color: #fbf; }
-}
 
 img { display: block; }
 

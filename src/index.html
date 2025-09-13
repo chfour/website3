@@ -45,16 +45,20 @@
             gap: 1em;
             max-width: 30rem;
         }
-        #links > * > div {
+        #links > li > a {
             display: inline-flex;
             flex-direction: column;
-        }
-        #links > * > div > * { width: max-content; }
-        #links a {
-            font-weight: bold;
             text-decoration: none;
+            color: inherit;
         }
-        #links > * > div > :nth-child(2) { font-size: 0.8em; }
+        #links > li > a > * { width: max-content; }
+        #links > li > a > :first-child {
+            font-weight: bold;
+            color: var(--color-link);
+        }
+        #links > li > a > :nth-child(2) {
+            font-size: 0.8em;
+        }
     </style>
 
     <link rel="me" href="https://wetdry.world/@chfour"> <!-- old fedi acc -->
@@ -83,30 +87,30 @@
             <p>known as <b>chfour</b></p>
 
             <ul class="inline-list" id="links">
-                <li><div>
-                    <a rel="me" href="https://merping.synth.download/@chfour">fediverse</a>
+                <li><a rel="me" href="https://merping.synth.download/@chfour">
+                    <span>fediverse</span>
                     <span>@chfour@merping.synth.download</span>
-                </div></li>
-                <li><div>
-                    <a href="https://bsky.app/profile/eeep.ee">bluesky</a>
+                </a></li>
+                <li><a href="https://bsky.app/profile/eeep.ee">
+                    <span>bluesky</span>
                     <span>@eeep.ee (bridged)</span>
-                </div></li>
-                <li><div>
-                    <a href="https://signal.me/#eu/uwW5t81nJulRdHjWEkNUE2omPv9HzXhzUzar2yvP14ULx50MgdZBwpxrhWX3RfA3">signal</a>
+                </a></li>
+                <li><a href="https://signal.me/#eu/uwW5t81nJulRdHjWEkNUE2omPv9HzXhzUzar2yvP14ULx50MgdZBwpxrhWX3RfA3">
+                    <span>signal</span>
                     <span>chfour.32</span>
-                </div></li>
-                <li><div>
-                        <a href="discord.html">discord</a>
-                        <span>ch4</span>
-                    </div></li>
-                <li><div>
-                    <a href="https://github.com/chfour">github</a>
+                </a></li>
+                <li><a href="discord.html">
+                    <span>discord</span>
+                    <span>ch4</span>
+                </a></li>
+                <li><a href="https://github.com/chfour">
+                    <span>github</span>
                     <span>chfour</span>
-                </div></li>
-                <li><div>
-                    <a href="https://files.eeep.ee/">file dumpster</a>
+                </a></li>
+                <li><a href="https://files.eeep.ee/">
+                    <span>file dumpster</span>
                     <span>files.eeep.ee</span>
-                </div></li>
+                </a></li>
             </ul>
         </main>
         <footer>
