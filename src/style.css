@@ -20,8 +20,8 @@
 
 :root {
     color-scheme: light dark;
-    --color-fg: #f2f2f2;
-    --color-bg: #000;
+    --color-fg: #000;
+    --color-bg: #f2f2f2;
     --color-link: #7d29e2;
     --color-link-visited: #a800ad;
 }
@@ -44,16 +44,11 @@ body {
     line-height: 1.5;
     font-weight: 500;
 
-    margin: 0;
-}
-
-article {
     margin: 3rem;
 }
 
 a { color: var(--color-link); }
 a:visited { color: var(--color-link-visited); }
-
 
 img { display: block; }
 
@@ -66,3 +61,14 @@ img { display: block; }
     content: ' / ';
     padding-inline: 0.25em;
 }
+
+.tag {
+    /* intentional swap */
+    background-color: var(--color-fg);
+    color: var(--color-bg);
+    font-size: 0.9em;
+    border-radius: 0.4em;
+    padding: 0.2em 0.4em;
+}
+
+.tag[data-tag="test"] { background-color: rgb(255, 112, 112); color: black; }

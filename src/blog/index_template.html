@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="jq and a shell script">
+    <title>blog index</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <ul>
+<!--BEGIN TEMPLATE-->
+        <li><article>
+            <a href="{{$path}}/">{{.title | @html}}</a> {{.tags | map("<span class=\"tag\" data-tag=\"\(.)\">\(.)</span>") | join(" ")}}
+        </article></li>
+<!--END TEMPLATE-->
+    </ul>
+</body>
+</html>

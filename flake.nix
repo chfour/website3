@@ -79,20 +79,32 @@
             '';
           };
 
+          packages.buildblog = pkgs.writeShellApplication {
+            name = "buildblog";
+            runtimeInputs = with pkgs; [ jq pandoc ];
+            text = builtins.readFile ./buildblog.sh; # eh?
+          };
+
           packages.website = pkgs.stdenvNoCC.mkDerivation {
             name = "chfour-website";
 
             src = ./src;
 
-            phases = [ "installPhase" ];
+            buildPhase = ''
+              runHook preBuild
+
+              ln -sf ${selfPkgs.website-fonts} ./fonts
+              ${selfPkgs.buildblog}/bin/buildblog blog/
+              rm blog/index_template.html
+
+              runHook postBuild
+            '';
 
             installPhase = ''
               runHook preInstall
 
-              mkdir -p $out
-
-              cp -r $src/* $out/
-              ln -sf ${selfPkgs.website-fonts} $out/fonts
+              mkdir -p $out/var/www
+              cp -r * $out/var/www
 
               runHook postInstall
             '';
