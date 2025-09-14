@@ -12,7 +12,7 @@ sed "/${template_start}/q" ./index_template.html > ./index.html
 template="$(sed "/\s*${template_start}/,/\s*${template_end}/!d;//d" ./index_template.html | \
             jq -Rs '"\"" + (gsub("(?<s>^|}})(?<p>.+?)(?<e>{{|$)"; "\(.s + (.p|@json|trimstr("\"")) + .e)"; "m") | rtrim | gsub("{{(?<p>.+?)}}"; "\\(\(.p))"; "m")) + "\""' -r)"
 
-find . -name content.djot -print0 | sort -r | while read -r -d '' post; do
+find . -name content.djot -print0 | sort -r -z | while read -r -d '' post; do
     post="${post%/*}"
     echo -n "${post} "
     jq -r '.title' "${post}/meta.json"
