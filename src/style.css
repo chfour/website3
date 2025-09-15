@@ -67,8 +67,16 @@ img { display: block; }
     background-color: var(--color-fg);
     color: var(--color-bg);
     font-size: 0.9em;
-    border-radius: 0.4em;
-    padding: 0.2em 0.4em;
+    border-radius: 0.3rem;
+    padding: 0.2rem 0.4rem;
 }
 
 .tag[data-tag="test"] { background-color: rgb(255, 112, 112); color: black; }
+
+pre {
+    padding: 1rem;
+    font-size: 1.1em;
+}
+:not(.sourceCode) > pre:has(code), div.sourceCode {
+    border-radius: 1rem;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="$lang$">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="pandoc and a shell script">
+    <title>$if(title-prefix)$$title-prefix$ &ndash; $endif$$pagetitle$</title>
+$if(highlighting-css)$
+    <link rel="stylesheet" href="$backtoblogroot$/highlighting.css">
+$endif$
+    <link rel="stylesheet" href="$backtoblogroot$/../style.css">
+$for(author-meta)$
+    <meta name="author" content="$author-meta$" />
+$endfor$
+$if(keywords)$
+    <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
+$endif$
+$if(description-meta)$
+    <meta name="description" content="$description-meta$" />
+$endif$
+$for(css)$
+    <link rel="stylesheet" href="$css$" />
+$endfor$
+$for(header-includes)$
+    $header-includes$
+$endfor$
+</head>
+<body>
+    <article>
+$for(include-before)$
+$include-before$
+$endfor$
+$if(title)$
+        <header id="title-block-header">
+            <h1 class="title">$title$</h1>
+            <p>
+$if(date-meta)$
+                <time datetime="$date-meta$">$date-meta$</time>
+$endif$
+                $for(tags)$<span class="tag" data-tag="$tags$">$tags$</span> $endfor$
+            </p>
+$if(subtitle)$
+            <p class="subtitle">$subtitle$</p>
+$endif$
+        </header>
+$endif$
+        <main>
+$body$
+        </main>
+$for(include-after)$
+$include-after$
+$endfor$
+    </article>
+</body>
+</html>

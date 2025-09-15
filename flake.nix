@@ -95,7 +95,7 @@
 
               ln -sf ${selfPkgs.website-fonts} ./fonts
               ${selfPkgs.buildblog}/bin/buildblog blog/
-              rm blog/index_template.html
+              rm blog/template_{index,page}.html
 
               runHook postBuild
             '';

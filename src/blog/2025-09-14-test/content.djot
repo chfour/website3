@@ -1,12 +1,40 @@
-# test post
-
 helloooo *oooo* _oooh_
 
-``` c
-#include <stdio.h>
+heres some math lmao $`\frac{2}{3} * \frac{3}{2}`
 
-int main() {
-    printf("balls\n");
-    return 0;
-}
+and heres some blurb the fitnessgram pacer test yadda yadda yadda
+ooooo aaaaa did you kn EU07.EXE EU07 (cmake), 00578a3 (committed at 2024-06-13 01:29:12 +0200)
+Failed to open file "eu07.ini" Bad init: failed to create glfw window
+Did you know it's really easy to hack your 3DS? Anyone can do it!
+
+the gnome color palette is really nice i should use it here tbh. look ma i am design
+
+I am Steve Jobs? I am Steve Jobs.
+
+``` c
+// a more realistic code example
+for (i = 0; i < samplecount; i++) {
+    int8_t s = samples[i];
+    
+    // correlation:  multiply by sine and cosine f=1200Hz and 2200Hz
+    // 1200.0 * SPS = samplerate
+    // & (1<<int(SPS/8+1) - 1)
+    int_mark_i[i & 0b111] = sin(TWOPI * i * (1200.0 / (1200.0 * SPS))) * s;
+    int_mark_q[i & 0b111] = cos(TWOPI * i * (1200.0 / (1200.0 * SPS))) * s;
+    int_space_i[i & 0b111] = sin(TWOPI * i * (2200.0 / (1200.0 * SPS))) * s;
+    int_space_q[i & 0b111] = cos(TWOPI * i * (2200.0 / (1200.0 * SPS))) * s;
+    // integration
+    float sum_mark_i = 0;
+    float sum_mark_q = 0;
+    float sum_space_i = 0;
+    float sum_space_q = 0;
+    for (uint8_t j = 0; j < SPS; j++) {
+        sum_mark_i += int_mark_i[j];
+        sum_mark_q += int_mark_q[j];
+        sum_space_i += int_space_i[j];
+        sum_space_q += int_space_q[j];
+    }
+    float sum_mark = sum_mark_i*sum_mark_i + sum_mark_q*sum_mark_q;
+    float sum_space = sum_space_i*sum_space_i + sum_space_q*sum_space_q;
+/* ... */
 ```
