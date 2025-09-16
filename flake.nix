@@ -85,6 +85,29 @@
             text = builtins.readFile ./buildblog.sh; # eh?
           };
 
+          packages.autorebuild = pkgs.writeShellApplication {
+            name = "autorebuild";
+            runtimeInputs = with pkgs; [ selfPkgs.buildblog pkgs.inotify-tools ];
+            text = ''
+              [ -z "''${1+x}" ] && echo "usage: $0 blog-dir" && exit 1
+
+              rebuild() {
+                time buildblog "$1"
+              }
+              rebuild "$@"
+              last=$(date +%s)
+              inotifywait -r -m "$1" \
+                -e modify -e create -e delete -e moved_to \
+                --excludei '/index.html|highlighting.css' \
+              | while read -r mod; do
+                echo "$mod"
+                now=$(date +%s)
+                [ $((now - last)) -ge 1 ] && rebuild "$@" || echo '< 2s, skipping'
+                last=$now
+              done
+            '';
+          };
+
           packages.website = pkgs.stdenvNoCC.mkDerivation {
             name = "chfour-website";
 
