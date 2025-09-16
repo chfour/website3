@@ -99,14 +99,17 @@ h1 {
 
 .tag {
     /* intentional swap */
-    background-color: var(--color-fg);
-    color: var(--color-bg);
+    --fg: var(--color-bg);
+    --bg: var(--color-fg);
+    background-color: var(--bg);
+    color: var(--fg);
     font-size: 0.9em;
     border-radius: 0.3rem;
     padding: 0.2rem 0.4rem;
 }
 
-.tag[data-tag="test"] { background-color: rgb(255, 112, 112); color: black; }
+.tag[data-tag='test'] { --bg: #f66151; --fg: #000; }
+.tag[data-tag='software'] { --bg: #8ff0a4; --fg: #000; }
 
 pre {
     padding: 1rem;

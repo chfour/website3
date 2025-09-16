@@ -1,0 +1,44 @@
+Download a data export/data archive. On Mastodon and derivatives, go into Settings -> Import and export -> Export.
+Click "Request your archive" and wait for the download link. Open a terminal, install [jq](https://jqlang.org/)
+if you don't have it, navigate to your extracted archive, and run the following one--liner:
+
+`jq '.orderedItems[] | select(.type == "Create") | .object.tag | map(select(.type == "Mention")) | select(any) | .[].name' -r outbox.json | sort | uniq -c | sort -n`
+
+The output will be in the usual `uniq -c` format of `count item`, so how many times you've mentioned someone, then their username,
+sorted by count ascending (so your most "popular" accounts last).
+
+You can substitute `.name` in the jq filter for `.href` and get profile URLs instead of usernames.
+Swap out `.type == "Mention"` for `.type == "Hashtag"` and get a list of the hashtags you've used.
+Or pipe all of that into `wc -l` to see how many distinct accounts you've mentioned.
+
+I have no idea if this works on anything other than Mastodon, lmao.
+
+## why?
+
+I love cool statistics. I've been active on the Fediverse for three years at the time of writing,
+so this produced very accurate data of who I usually interact with, kind of like that fedicircle thing.
+
+Also because over those three years I've managed to amass some, oh, 1000 followers and follows each.
+(I used to follow back a _lot_ early on.)
+
+As it turns out, the timeline gets Very crowded, and to me, annoying, with those counts. Yay no algorithm.
+And despite being seemingly very famous, I have never really heard from most of these people in any way, or interacted
+with them, for that matter. A lot of these accounts just ended up dying.
+
+So I wanted to unfollow _most_ people from my list (and remove most of my followers), while also keeping my friends,
+the people I do actually interact with. Preferrably without initiating a denial--of--service attack on my instance.
+
+I thought about seeing how many likes my posts have gotten from different accounts, but that would require database
+access (which I don't have).
+
+Likes "given" to others are also out, as the `likes.json` file in the export only lists post URLs, so I'd need to query
+my instance a zillion times to see who each post belongs to. Suboptimal.
+
+Then I had an idea to just count how many times I've replied to different accounts. This is much simpler, as usually
+(not always, but usually is good enough here) posts in a reply chain will have all the users in the chain listed as
+mentions, and those replies are just there in the `outbox.json` file. I didn't even have to parse the post text, the
+format just has all the mentions for a given post neatly listed (with the used hashtags too).
+Then it's just a matter of writing a... kind of long jq filter and piping it into the usual sort | uniq -c | sort.
+
+TL;DR I just made a new account, and this ended up being only somewhat useful to check if I had forgotten about someone.
+Still, pretty data.
