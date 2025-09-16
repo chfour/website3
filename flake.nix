@@ -102,7 +102,7 @@
               | while read -r mod; do
                 echo "$mod"
                 now=$(date +%s)
-                [ $((now - last)) -ge 1 ] && rebuild "$@" || echo '< 2s, skipping'
+                [ $((now - last)) -ge 2 ] && rebuild "$@" || echo '< 2s, skipping'
                 last=$now
               done
             '';
