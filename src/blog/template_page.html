@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="pandoc and a shell script">
     <title>$if(title-prefix)$$title-prefix$ &ndash; $endif$$pagetitle$</title>
+    <link rel="stylesheet" href="$backtoblogroot$/../style.css">
+    <style>
+        main {
+            max-width: 50rem;
+        }
+    </style>
 $if(highlighting-css)$
     <link rel="stylesheet" href="$backtoblogroot$/highlighting.css">
 $endif$
-    <link rel="stylesheet" href="$backtoblogroot$/../style.css">
 $for(author-meta)$
     <meta name="author" content="$author-meta$" />
 $endfor$
@@ -26,18 +31,29 @@ $for(header-includes)$
 $endfor$
 </head>
 <body>
+    <nav>
+        <img src="$backtoblogroot$/../platinum_fop_45_o.svg" alt="" width="64" height="64" id="fops">
+        <ul class="inline-list slashed">
+            <li><a href="$backtoblogroot$/../">home</a></li>
+            <li><a href="$backtoblogroot$/">blog</a></li>
+        </ul>
+    </nav>
     <article>
 $for(include-before)$
 $include-before$
 $endfor$
 $if(title)$
-        <header id="title-block-header">
-            <h1 class="title">$title$</h1>
-            <p>
+        <header>
+            <h1 id="title">$title$</h1>
+            <p id="details">
 $if(date-meta)$
                 <time datetime="$date-meta$">$date-meta$</time>
 $endif$
-                $for(tags)$<span class="tag" data-tag="$tags$">$tags$</span> $endfor$
+                <span class="tags">
+$for(tags)$
+                    <span class="tag" data-tag="$tags$">$tags$</span>
+$endfor$
+                </span>
             </p>
 $if(subtitle)$
             <p class="subtitle">$subtitle$</p>

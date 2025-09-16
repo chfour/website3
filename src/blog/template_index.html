@@ -7,18 +7,30 @@
     <title>blog index</title>
     <link rel="stylesheet" href="../style.css">
     <style>
-        a {
-            text-decoration: none;
-        }
+        a { text-decoration: none; }
     </style>
 </head>
 <body>
-    <ul>
-<!--BEGIN TEMPLATE-->
-        <li><article>
-            <a href="{{$path}}/">{{.title | @html}}</a> {{.tags | map("<span class=\"tag\" data-tag=\"\(.)\">\(.)</span>") | join(" ")}}
-        </article></li>
-<!--END TEMPLATE-->
-    </ul>
+    <nav>
+        <img src="../platinum_fop_45_o.svg" alt="" width="64" height="64" id="fops">
+        <ul class="inline-list slashed">
+            <li><a href="../">home</a></li>
+        </ul>
+    </nav>
+    <main>
+        <header>
+            <h1>blog index</h1>
+            <p>posts & things & various ramblings, probably</p>
+        </header>
+        <ul>
+            <!--BEGIN TEMPLATE-->
+            <li><article>
+                <a href="{{$path}}/">{{.title | @html}}</a>
+                (<time datetime="{{.date}}">{{.date}}</time>)
+                <span class="tags">{{.tags | map("<span class=\"tag\" data-tag=\"\(.)\">\(.)</span>") | join(" ")}}</span>
+            </article></li>
+            <!--END TEMPLATE-->
+        </ul>
+    </main>
 </body>
 </html>

@@ -45,12 +45,47 @@ body {
     font-weight: 500;
 
     margin: 3rem;
+    margin-top: 2rem;
 }
 
 a { color: var(--color-link); }
 a:visited { color: var(--color-link-visited); }
 
 img { display: block; }
+
+#fops { filter: drop-shadow(0 0 5px #ccc); }
+@media (prefers-color-scheme: dark) {
+    #fops { filter: drop-shadow(0 0 5px #f2f2f277); }
+}
+
+time { font-feature-settings: "tnum"; }
+
+nav #fops { display: inline; }
+nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+nav > ul {
+    margin-block: auto;
+    font-size: 1.1em;
+}
+/* specificity hack lol */
+nav a[href] {
+    color: var(--color-link);
+    text-decoration: none;
+}
+
+header > * { margin-block: 0; }
+header {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+h1 {
+    font-size: 2.5em; /* shur up firefox */
+    line-height: 1;
+    margin-bottom: 0.4rem;
+}
 
 .inline-list {
     list-style-type: none;

@@ -38,11 +38,12 @@ find . -name content.djot -print0 | sort -r -z | while read -r -d '' post; do
     backtoblogroot="$(for ((i=0; i < slashesinpath; i++)); do echo -n '../'; done)"
     backtoblogroot="${backtoblogroot%/}"
     jq '.title' "${post}/meta.json"
-    jq -r --arg path "${post#./*/*/}" "${template}" "${post}/meta.json" >> ./index.html
+    jq -r --arg path "${post}" "${template}" "${post}/meta.json" >> ./index.html
     pandoc -f djot -t html5 \
         --mathml \
         --template="${page_template}" \
         --variable="backtoblogroot=${backtoblogroot}" \
+        --variable="path=${post#./}" \
         --metadata-file="${post}/meta.json" \
         "${post}/content.djot" -o "${post}/index.html"
 done
