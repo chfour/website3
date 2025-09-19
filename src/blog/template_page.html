@@ -7,7 +7,7 @@
     <title>$if(title-prefix)$$title-prefix$ &ndash; $endif$$pagetitle$</title>
     <link rel="stylesheet" href="$backtoblogroot$/../style.css">
     <style>
-        main {
+        #post-body {
             max-width: 50rem;
             text-align: justify;
         }
@@ -39,6 +39,7 @@ $endfor$
             <li><a href="$backtoblogroot$/">blog</a></li>
         </ul>
     </nav>
+    <main>
     <article>
 $for(include-before)$
 $include-before$
@@ -61,12 +62,13 @@ $if(subtitle)$
 $endif$
         </header>
 $endif$
-        <main>
+        <div id="post-body">
 $body$
-        </main>
+        </div>
 $for(include-after)$
 $include-after$
 $endfor$
     </article>
+    </main>
 </body>
 </html>
