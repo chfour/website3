@@ -1,6 +1,6 @@
 Download a data export/data archive. On Mastodon and derivatives, go into Settings -> Import and export -> Export.
 Click "Request your archive" and wait for the download link. Open a terminal, install [jq](https://jqlang.org/)
-if you don't have it, navigate to your extracted archive, and run the following one--liner:
+if you don't have it, navigate to your extracted archive, and run the following one-liner:
 
 `jq '.orderedItems[] | select(.type == "Create") | .object.tag | map(select(.type == "Mention")) | select(any) | .[].name' -r outbox.json | sort | uniq -c | sort -n`
 
