@@ -50,9 +50,8 @@ find . -name meta.json -print0 | sort -r -z | while read -r -d '' post; do
     jq '.title' <<<"$meta"
 
     # with help from domi https://donotsta.re/objects/b84298d7-582f-4b42-9bbd-bc5636a2b9fb
-    pandoc_args=()
-    while read -r -d '' arg; do pandoc_args+=("$arg"); done < \
-        <(jq --raw-output0 '.["$pandoc-args"][], .["$input"], "-o", .["$output"]' <<<"$meta")
+    # and https://www.shellcheck.net/wiki/SC2046
+    mapfile -d '' pandoc_args < <(jq --raw-output0 '.["$pandoc-args"][], .["$input"], "-o", .["$output"]' <<<"$meta")
 
     pushd "$post" >/dev/null
     pandoc_error=0
