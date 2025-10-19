@@ -1,0 +1,151 @@
+/* warning: hacky bs ahead */
+
+pre > code.sourceCode {
+    white-space: pre-wrap;
+    display: block;
+}
+
+pre.numberSource code { counter-reset: source-line 0; }
+pre.numberSource {
+    margin-left: 3rem;
+    padding-left: 1rem;
+    border-left: 1px dashed #5e5c64;
+}
+pre.numberSource code > span {
+    counter-increment: source-line;
+    display: inline-block;
+    text-indent: -3rem;
+}
+pre.numberSource code > span > a:first-child {
+    margin-right: 1rem;
+    margin-left: -0.5rem;
+}
+pre.numberSource code > span > a:first-child::before {
+    box-sizing: border-box;
+    width: 2.5rem;
+    display: inline-block;
+    padding-right: 0.5rem;
+    text-align: right;
+    content: counter(source-line);
+    color: #5e5c64;
+}
+
+/*
+    colors mainly from the gnome color palette
+    https://developer.gnome.org/hig/reference/palette.html
+*/
+
+div.sourceCode {
+    text-align: initial;
+    background-color: #f3f3f3;
+    color: black;
+}
+
+code span.do, /* Documentation */
+code span.co  /* Comment */
+{ color: #3d3846; font-style: italic; }
+
+code span.in, /* Information */
+code span.an, /* Annotation */
+code span.cv  /* CommentVar */
+{ color: #3d3846; }
+
+code span.wa, /* Warning */
+code span.al  /* Alert */
+{ color: #a51d2d; }
+
+code span.sc  /* SpecialChar */
+{ color: #237000; font-weight: bold; }
+code span.ch, /* Char */
+code span.ss, /* SpecialString */
+code span.vs, /* VerbatimString */
+code span.st  /* String */
+{ color: #237000; }
+
+code span.dt  /* DataType */
+{ color: #1a5fb4; }
+code span.at  /* Attribute */
+{ color: #204a87; }
+code span.dv, /* DecVal */
+code span.fl, /* Float */
+code span.bn  /* BaseN */
+{ color: #9141ac; }
+code span.im, /* Import */
+code span.kw, /* Keyword */
+code span.cf  /* ControlFlow */
+{ color: #9141ac; font-weight: bold; }
+code span.pp, /* Preprocessor */
+code span.cn, /* Constant */
+code span.ex, /* Extension */
+code span.bu  /* BuiltIn */
+{ color: #813d9c; }
+
+code span.op  /* Operator */
+{ color: #865e3c; }
+code span.er  /* Error */
+{ color: #c01c28; font-weight: bold; }
+
+code span.fu, /* Function (doesn't work?) */
+code span.ot, /* Other (also couldn't find) */
+code span.va  /* Variable (for some reason this behaves like Constant) */
+{ color: #241f31; }
+
+@media (prefers-color-scheme: dark) {
+    pre.numberSource { border-color: #9a9996; }
+    pre.numberSource code > span > a:first-child::before { color: #9a9996; }
+
+    div.sourceCode {
+        text-align: initial;
+        background-color: #252525;
+        color: white;
+    }
+
+    code span.do, /* Documentation */
+    code span.co  /* Comment */
+    { color: #deddda; font-style: italic; }
+
+    code span.in, /* Information */
+    code span.an, /* Annotation */
+    code span.cv  /* CommentVar */
+    { color: #deddda; }
+
+    code span.wa, /* Warning */
+    code span.al  /* Alert */
+    { color: #f66151; }
+
+    code span.sc  /* SpecialChar */
+    { color: #33d17a; font-weight: bold; }
+    code span.ch, /* Char */
+    code span.ss, /* SpecialString */
+    code span.vs, /* VerbatimString */
+    code span.st  /* String */
+    { color: #33d17a; }
+
+    code span.dt  /* DataType */
+    { color: #99c1f1; }
+    code span.at  /* Attribute */
+    { color: #62a0ea; }
+    code span.dv, /* DecVal */
+    code span.fl, /* Float */
+    code span.bn  /* BaseN */
+    { color: #dc8add; }
+    code span.im, /* Import */
+    code span.kw, /* Keyword */
+    code span.cf  /* ControlFlow */
+    { color: #dc8add; font-weight: bold; }
+    code span.pp, /* Preprocessor */
+    code span.cn, /* Constant */
+    code span.ex, /* Extension */
+    code span.bu  /* BuiltIn */
+    { color: #dc8add; }
+
+    code span.op  /* Operator */
+    { color: #cdab8f; }
+    code span.er  /* Error */
+    { color: #e01b24; font-weight: bold; }
+
+    code span.fu, /* Function */
+    code span.ot, /* Other */
+    code span.va  /* Variable */
+    { color: #f6f5f4; }
+}

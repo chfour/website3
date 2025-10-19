@@ -13,20 +13,6 @@ defaults="$(jq -c '.' "$defaults_file")"
 index_template="$(jq -r '.["$index-template"]' <<<"$defaults")"
 ! [ -e "$index_template" ] && echo "${0}: error: ${rel_root}${index_template} does not exist" >&2 && exit 1
 
-# generate the code syntax highlighting css
-# unfortunately pandoc did not like --template=<(echo ...)
-# shellcheck disable=SC2016
-echo '$highlighting-css$' > ./highlighting.css
-# time to prank pandoc epic style
-echo $'``` c\n```' | pandoc -f djot -t html5 \
-    --template=./highlighting.css -o ./highlighting.css \
-    --highlight-style=tango # to be replaced, probably
-
-# ...because of this. and because it looks eh
-cat >> ./highlighting.css <<EOF
-.sourceCode { color: black; }
-EOF
-
 sed "/${template_start}/q" "${index_template}" > ./index.html
 
 # this... thing turns the template in the html into a json string with jq string interpolation, to be passed back into jq

@@ -21,7 +21,7 @@
 :root {
     color-scheme: light dark;
     --color-fg: #000;
-    --color-bg: #f2f2f2;
+    --color-bg: #fff;
     --color-link: #7d29e2;
     --color-link-visited: #a800ad;
 }
@@ -113,7 +113,11 @@ h1 {
 
 pre {
     padding: 1rem;
-    font-size: 1.1em;
+}
+pre, code {
+    font-family: 'Adwaita Mono', 'Fira Code', 'JetBrains Mono', 'Lucida Console', monospace;
+    font-size: 0.97em;
+    line-height: 1.25;
 }
 :not(.sourceCode) > pre:has(code), div.sourceCode {
     border-radius: 1rem;
