@@ -1,0 +1,11 @@
+{
+    "lang": "en",
+    "$pandoc-args": [
+        "--from=djot", "--to=html5",
+        "--mathml",
+        "--template={{root}}/template_page.html"
+    ],
+    "$input": "content.djot",
+    "$output": "index.html",
+    "$index-template": "template_index.html"
+}

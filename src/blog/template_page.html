@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="pandoc and a shell script">
     <title>$if(title-prefix)$$title-prefix$ &ndash; $endif$$pagetitle$</title>
-    <link rel="stylesheet" href="$backtoblogroot$/../style.css">
+    <link rel="stylesheet" href="$root$/../style.css">
     <style>
         #post-body {
             max-width: 50rem;
@@ -13,19 +13,19 @@
         }
     </style>
 $if(highlighting-css)$
-    <link rel="stylesheet" href="$backtoblogroot$/highlighting.css">
+    <link rel="stylesheet" href="$root$/highlighting.css">
 $endif$
 $for(author-meta)$
-    <meta name="author" content="$author-meta$" />
+    <meta name="author" content="$author-meta$">
 $endfor$
 $if(keywords)$
-    <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
+    <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$">
 $endif$
 $if(description-meta)$
-    <meta name="description" content="$description-meta$" />
+    <meta name="description" content="$description-meta$">
 $endif$
 $for(css)$
-    <link rel="stylesheet" href="$css$" />
+    <link rel="stylesheet" href="$css$">
 $endfor$
 $for(header-includes)$
     $header-includes$
@@ -33,10 +33,10 @@ $endfor$
 </head>
 <body>
     <nav>
-        <img src="$backtoblogroot$/../platinum_fop_45_o.svg" alt="" width="64" height="64" id="fops">
+        <img src="$root$/../platinum_fop_45_o.svg" alt="" width="64" height="64" id="fops">
         <ul class="inline-list slashed">
-            <li><a href="$backtoblogroot$/../">home</a></li>
-            <li><a href="$backtoblogroot$/">blog</a></li>
+            <li><a href="$root$/../">home</a></li>
+            <li><a href="$root$/">blog</a></li>
         </ul>
     </nav>
     <main>

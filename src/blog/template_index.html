@@ -25,7 +25,7 @@
         <ul>
             <!--BEGIN TEMPLATE-->
             <li><article>
-                <a href="{{$path}}/">{{.title | @html}}</a>
+                <a href="{{$path}}/{{if .["$output"] == "index.html" then "" else .["$output"] end}}">{{.title | @html}}</a>
                 (<time datetime="{{.date}}">{{.date}}</time>)
                 <span class="tags">{{.tags | map("<span class=\"tag\" data-tag=\"\(.)\">\(.)</span>") | join(" ")}}</span>
             </article></li>
