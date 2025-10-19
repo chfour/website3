@@ -22,8 +22,8 @@
     color-scheme: light dark;
     --color-fg: #000;
     --color-bg: #fff;
-    --color-link: #7d29e2;
-    --color-link-visited: #a800ad;
+    --color-link: #7149ff;
+    --color-link-visited: #8d00ed;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -31,7 +31,7 @@
         --color-bg: #1a1a1a;
         --color-fg: #fff;
         --color-link: #aaf;
-        --color-link-visited: #fbf;
+        --color-link-visited: #dfa5ff;
     }
 }
 
@@ -55,7 +55,7 @@ img { display: block; }
 
 #fops { filter: drop-shadow(0 0 5px #ccc); }
 @media (prefers-color-scheme: dark) {
-    #fops { filter: drop-shadow(0 0 5px #f2f2f277); }
+    #fops { filter: drop-shadow(0 0 3px #f2f2f277); }
 }
 
 time { font-feature-settings: "tnum"; }
