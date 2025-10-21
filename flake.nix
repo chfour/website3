@@ -119,6 +119,9 @@
               ln -sf ${selfPkgs.website-fonts} ./fonts
               ${selfPkgs.buildblog}/bin/buildblog blog/
               rm blog/template_{index,page}.html
+              sed -i \
+                "s|/nix/store/VERY5p3c14lsecretv4luereplaceme0-chfour-website|$out|" \
+                index.html
 
               runHook postBuild
             '';
