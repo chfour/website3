@@ -1,0 +1,6 @@
+{
+    "title": "create your own certificate authority & certs (feat. Caddy)",
+    "date": "2025-12-29",
+    "tags": ["software"],
+    "keywords": ["openssl", "tls", "caddy", "self-signed", "certificate authority", "ca", "certificate", "ssl"]
+}

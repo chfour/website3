@@ -1,0 +1,141 @@
+With blackjack, and hookers. AKA it's like six commands ([here they are](./commands.txt)) but I make an entire long ass blog post out of it.
+
+I had to look all this up because I was trying to self-host Immich, and turns out the ISP blocks ports 80 and 443, for Some reason,
+and I didn't feel like setting up the DNS ACME challenge. There will (hopefully) be a follow-up to this post about doing mTLS specifically
+the way the app likes it.
+
+Make sure you have OpenSSL installed. If you're on any kind of unix-like system, you most likely already have it. On NixOS: `nix shell nixpkgs#openssl`.
+
+## step 1: create the certificate authority
+
+We first need to generate the private key that will be used by our CA to sign certificates.
+We'll use 256-bit EC keys. Run:
+
+``` sh
+openssl ecparam -name prime256v1 -genkey -out ca_priv.key
+```
+
+This will generate the key and save it to `ca_priv.key`. Beware that it is not encrypted in any way.
+([docs](https://docs.openssl.org/3.6/man1/openssl-ecparam/) for ecparam)
+
+Next, we need to create the CA's root certificate.
+This root certificate can be used to verify any certificate the CA signs.
+Let's use SHA-384 and make the certificate valid for 20 years (= 7300 days, not accounting for leap years). Run:
+
+``` sh
+openssl req -x509 -new -nodes -key ca_priv.key -sha384 -out ca_cert.pem -days 7300 -subj '/C=PL/O=BallsInc/CN=BallsInc Root CA'
+```
+
+The `-subj` parameter defines the subject name, a so-called Distinguished Name (DN, Deez Nuts, etc.)
+that identifies the subject of the certificate. In this case, it will also be the issuer.
+If you omit this parameter, openssl will ask you for the fields interactively one by one.
+Alternatively you can read about these in [RFC\ 4519 section\ 2](https://datatracker.ietf.org/doc/html/rfc4519#section-2)
+or in\ [ITU\ Recommendation\ X.520 section\ 6](https://www.itu.int/rec/T-REC-X.520-201910-I/en)
+([source](https://stackoverflow.com/questions/6464129/certificate-subject-x-509)).
+That said, country (C), organization (O), and common name (CN) are probably all you need.
+The common name is just Some abstract name describing the object (or person, if your certificate is for a person).
+
+The `-x509` option means we want to generate a self-signed certificate, and not a certificate signing request.
+What that is, you can already probably guess but I'll get into shortly.
+But the important part is we are essentially bootstrapping the chain of trust, pulling a certificate out the ass if you will.
+For any certificates signed by this CA to be considered "valid", the device/program/whatever must trust this root certificate.
+Otherwise, you might get errors or warnings. They don't necessarily mean danger, but this situation is indistinguishable
+from someone executing a man-in-the-middle attack on you. Which is why those warnings exist.
+
+You can view the guts of the certificate by running:
+
+``` sh
+openssl x509 -text -noout -in ca_cert.pem
+```
+
+Sidetrack time: You can get information on a "real" certificate in the same way.
+In Firefox, click on the padlock in the URL bar, then "Connection secure", "More information",
+and "View certificate". It'll take you to a page that will look pretty close to the output of the command.
+The tabs on the page correspond to every entry in the chain of trust, from the website's certificate to the root cert.
+You can also save each certificate as a file and inspect them with openssl.
+
+## step 2: making a server certificate
+
+The server also needs a private key. We'll run the command from before, just saving to a different file:
+
+``` sh
+openssl ecparam -name prime256v1 -genkey -out server_priv.key
+```
+
+Then we need to create the certificate signing request that I mentioned earlier.
+A CSR is a message detailing the requested certificate which is also signed by the requesting entity.
+After it is generated, it's sent to the CA to be signed. But first:
+
+``` sh
+openssl req -new -key server_priv.key -sha384 -subj '/C=PL/O=BallsInc/CN=example.org' -addext 'subjectAltName=DNS:example.org,DNS:*.example.org' -out server_cert_csr.csr
+```
+
+The `-subj` parameter is a similar story to the previous instance. The common name (CN) can be anything,
+like the name of the server or service but is most commonly the domain name.
+
+The new and important thing here is `-addext 'subjectAltName=...'`. Subject Alternative Names are an extension to X.509,
+the standard we're generating certificates in. They allow us to specify Alternative Names that the subject is known by.
+Here I specified two DNS SANs (Sans Undertale), but you can also add IP addresses by specifying for example `IP:10.0.0.1`.
+You can mix and match too. ([docs](https://docs.openssl.org/3.6/man1/openssl-req/) for req)
+
+Now for the signing:
+
+``` sh
+openssl x509 -req -in server_cert_csr.csr -CA ca_cert.pem -CAkey ca_priv.key -CAcreateserial -out server_cert.pem -days 3650 -sha384 -copy_extensions=copyall
+```
+
+It should say something along the lines of:
+
+```
+Certificate request self-signature ok
+subject=C=PL, O=BallsInc, CN=example.org
+```
+
+...and as such the cert, in `server_cert.pem`, is now valid for 10 years.
+`-copy_extensions=copyall` makes openssl also copy over the extensions from the CSR to the cert, not just the subject.
+Probably irrelevant here but if you use `copyall` and accept a CSR from someone else, they can request their own CA cert and start making valid certificates on their own,
+see [here](https://docs.openssl.org/3.6/man1/openssl-ca/#warnings). (Also, [docs](https://docs.openssl.org/3.6/man1/openssl-x509/) for the x509 command.)
+
+# step 3: Caddy setup
+
+I'll be describing configs for Caddy, but it's not that different on other software.
+
+Copy the server key (`server_priv.key`) and certificate (`server_cert.pem`) to your server, I copied mine to /etc/caddy.
+Ensure the owner and group on these files is set to the user/group Caddy is running under, in my case `caddy:caddy`.
+The key file should also have its permissions set to 600, that is read-write only for the owner. OpenSSL should set it to that
+when creating the file, but check to be sure.
+
+Then, inside a site block (or a [snippet](https://caddyserver.com/docs/caddyfile/concepts#snippets)), add the following:
+
+``` caddyfile
+tls /etc/caddy/server_cert.pem /etc/caddy/server_priv.key
+```
+
+The argument order is cert, then private key ([docs](https://caddyserver.com/docs/caddyfile/directives/tls#syntax)).
+Reload and Caddy should now use the certificate and key combo.
+
+# step 4: testing and trusting
+
+If you now try to `curl -v` your server, you will notice that it will result in an error. (should!)
+
+Add `--cacert ca_cert.pem` and it should say `* SSL certificate verified via OpenSSL.` and carry on as usual.
+If this happens, success!
+
+To make all those warnings go away, you'll need to trust your CA certificate system-wide.
+Chances are you may need the certificate in DER format, as is the case for Android.
+
+To convert from PEM to DER:
+
+``` sh
+openssl x509 -in ca_cert.pem -inform pem -outform der -out ca_cert_der.crt
+```
+
+Windows accepts I think both...? and you have to do it
+[through something MMC something certmgr.msc](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/trusted-root-certification-authorities-certificate-store).
+On Linux, look up how your distro does it. On NixOS it's [`security.pki.certificateFiles`](https://search.nixos.org/options?query=security.pki.certificateFiles).
+Otherwise [this](https://github.com/NixOS/nixpkgs/blob/43a1f18c34a6989bda435c2819435b4d9824b8c3/nixos/modules/security/ca.nix#L102)
+_may_ be useful, though there are probably better places to put it.
+
+## additional sources
+
+[This website here](https://www.golinuxcloud.com/openssl-generate-ecc-certificate/) which showed me most of what to do.

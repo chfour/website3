@@ -1,0 +1,12 @@
+openssl ecparam -name prime256v1 -genkey -out ca_priv.key
+openssl req -x509 -new -nodes -key ca_priv.key -sha384 -out ca_cert.pem -days 7300 -subj '/C=PL/O=BallsInc/CN=BallsInc Root CA'
+
+openssl ecparam -name prime256v1 -genkey -out server_priv.key
+openssl req -new -key server_priv.key -sha384 -subj '/C=PL/O=BallsInc/CN=example.org' -addext 'subjectAltName=DNS:example.org,DNS:*.example.org' -out server_cert_csr.csr
+
+openssl x509 -req -in server_cert_csr.csr -CA ca_cert.pem -CAkey ca_priv.key -CAcreateserial -out server_cert.pem -days 3650 -sha384 -copy_extensions=copyall
+# Certificate request self-signature ok
+# subject=C=PL, O=BallsInc, CN=example.org
+
+# optionally:
+openssl x509 -in ca_cert.pem -inform pem -outform der -out ca_cert_der.crt
