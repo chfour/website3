@@ -1,0 +1,220 @@
+I'm making a weather station because they're really cool. I've always wanted one, idk why exactly.
+But they're just _cool_ to me. Meteorology is cool too.
+([Holy shit there are _so_ many kinds of clouds.](https://en.wikipedia.org/wiki/List_of_cloud_types))
+
+So ANYWAYS,
+
+## The Computer
+
+![A small, square PC motherboard, with a passive heatsink. The PCB has a green soldermask. The two SODIMM slots are both filled with laptop memory modules.](./img/mobo.webp)
+
+This is an Intel Desktop Board D525MW. It boards desktops.
+
+It sports an Entire Passively Cooled Two Core Four Thread Intel Atom Something running at a Blazing Fast One Point Eight Gigahertz.
+You can't change that, it's locked at 1.8, `/sys/devices/system/cpu/cpufreq` is empty.
+The memory speed, you ask. The [Technical Product Specification](https://files.eeep.ee/misc/Intel%20Desktop%20Board%20D525MW%20D525MWV%20Technical%20Product%20Specification.pdf),
+which is basically the manual, says this:
+
+> Support for DDR3 800 MHz, DDR3 1066 MHz, and DDR3 1333 MHz SO-DIMMs
+
+But then adds this Helpful Note:
+
+> Note: DDR3 1066 MHz and DDR3 1333 MHz memory will run at 800 MHz
+
+Fun.
+
+But I want to use it in this project because since I got it it's been very good at such things as taking space
+and collecting dust and because it's also borderline useless for anything else.
+And because it'll let me run NixOS without too much struggle.
+I mean, any operations involving the Nix store aren't exactly the fastest but screw it, it'll be fiiiine.
+Basically it's junk that I'd like to find a use for.
+
+I dug it out recently, stuck two 1GB RAM sticks in it, managed to install NixOS with a Little bit of struggle
+(it thankfully more or less supports UEFI), and then set up Prometheus + Grafana along with node_exporter.
+Nothing to really write home about here, it's easy on NixOS, and the wiki has examples.
+Holy shit is playing with time series fun though.
+It really is unusually fun to watch the temperature of a passively cooled CPU graphed over a few hours.
+
+When I first started playing with it it would keep complaining about a dead backup battery, and a checksum error,
+and the BIOS settings being blank, so I swapped the coin cell out for the first one I could find
+and it seems to have shut up about allat for now.
+I was also getting random SATA errors in dmesg. Swapped out the cable, seemed to be okay.
+But then it would continuously spam the following into dmesg every second or so:
+
+```
+ata1: SATA link up 1.5 Gbps (SStatus 113 SControl 310)
+ata1.00: configured for UDMA/33
+```
+
+[Turns out](https://askubuntu.com/questions/1273679/kernel-is-spewing-ata-link-up-messages-every-second)
+this has something to do with link power management.
+I've never seen that happen so I'm assuming it's implemented in a weird way on this board.
+whatever. Go my oneliner:
+
+``` sh
+sudo sh -c 'for f in /sys/class/scsi_host/host*/link_power_management_policy; do echo max_performance | tee "$f"; done'
+```
+
+And the problem is gone. Why is it linking at SATA 1 speeds, because it _should_ be capable of 3Gbit/s, no fucking clue.
+But it seems to at least Run Okay.
+
+## the Other Part of This Post
+
+I got this idea a while ago, that if I were to use only I2C sensors, then I could read them out from a regular x86 computer
+running Linux directly. How?
+Well inside your PC there's already at least one I2C bus, in the form of SMBus (which is... similar enough for our purposes).
+Hell, if you happen to be using an x86 PC right now, your computer still has ISA somewhere inside.
+
+SMBus connects things like random sensors that may be scattered around the board to the chipset or something, idk exactly.
+I2C is also how your computer identifies memory modules through [SPD](https://en.wikipedia.org/wiki/Serial_presence_detect).
+There's literally a plain old little 24Cxx-like I2C EEPROM on every RAM stick, address 0x50 and everything.
+Some even have temperature sensors too. If you have a laptop, the touchpad is connected either through I2C or PS2. It's legacy shit all the way down.
+
+These buses are not exactly _accessible_ though.
+Enter VGA. And HDMI, and DVI, and DisplayPort (at least in DVI/HDMI mode? I think?).
+The way a video source (GPU) supporting those identifies a connected display and its supported modes is by reading its
+EDID (Extended Display Identification Data) over DDC (Display Data Channel).
+EDID is called Extented because before those two, a VGA display could only signal a very
+limited amount of supported modes by pulling the four ID pins in the connector low.
+Turns out DDC is just I2C, and the thing that stores the EDID is Yet Another regular ass I2C EEPROM.
+You can just wire shit to a VGA port, noone can stop you.
+
+And people have done it, namely mitxela, who [wired up an I2C OLED to a HDMI port](https://mitxela.com/projects/ddc-oled),
+as well as [vimpo](https://github.com/vimpop/) who [did the same](https://youtu.be/6KJpy9DRzfY),
+but also went further and [got a character LCD to work through a PCF8574 I2C I/O expander](https://youtu.be/4z_ntKJSg_8).
+It's certainly not a new idea, I just don't think I've seen anyone use it for stuff you'd usually use something like
+a Raspberry Pi.
+
+Here's a pinout: (receptacle side shown, if you're wiring a plug up, it's the same order if you look from the back of it):
+
+![A VGA port with its pins annotated: pins 5 and 10 are both GND, 9 is +5 volts, 12 is SDA, and 15 is SCL](./img/vga.webp)
+
+_(Yes, +5V, important: DDC uses 5V logic.)_
+
+Try it: You can get all of those buses to appear in `/dev` under Linux by inserting the `i2c-dev` module.
+Then using `i2cdetect` from `i2c-tools`, you can list I2C/SMBus adapters with `i2cdetect -l` (as root).
+My list looks like this:
+
+```
+i2c-0	smbus	SMBus I801 adapter at 2000	SMBus adapter
+i2c-1	i2c  	i915 gmbus ssc            	I2C adapter
+i2c-2	i2c  	i915 gmbus vga            	I2C adapter
+i2c-3	i2c  	i915 gmbus panel          	I2C adapter
+i2c-4	i2c  	i915 gmbus dpc            	I2C adapter
+i2c-5	i2c  	i915 gmbus dpb            	I2C adapter
+i2c-6	i2c  	i915 gmbus dpd            	I2C adapter
+```
+
+The one with `i915 gmbus vga` is the one I'm after. It'll be different for you.
+You can also find the right one under `/sys/class/drm/card*-*/`, check what the symlink named `ddc` is pointing at.
+Once you have it, you can scan it by doing `i2cdetect -y 2` (again as root), of course substituting 2 for your adapter number.
+If you're doing this to a display, address 0x50 (the EDID EEPROM) should respond, and a few others might too, these, I think,
+are addresses used for DDC/CI ("Control Interface"). This is that thing that lets you control stuff like monitor settings from the OS.
+
+## to obtain One (1) VGA Connector:
+
+So let's actually wire up the sensor. The sensor I'll be using for now, one of the two that will end up in the weather station,
+is the Sensirion SHT31, a temperature + humidity sensor.
+The other sensor is the Bosch Sensortec BMP280 (temperature + pressure), which I won't be using for now
+because it runs strictly on 3.3V logic. The SHT31 is fine with 5V.
+
+I needed a VGA plug. So I thought about That One VGA splitter that I took from school
+(they threw it out because the cable was bad. I asked if I could take it, they agreed, so I picked it out of the trash can, lmao),
+found it, and started hacking away at it. It was quite the fucking fight, the gummy-ish plastic that these get potted in
+is surprisingly tough when there's this much of it.
+
+While pulling the component of interest out of the sea of plastic, I managed to pull out a few pins.
+Great, I said, thinking these were the pins I needed, and started seeking the next best thing I could pull a VGA plug out of.
+
+I remembered that at one point I had also disassembled a monitor with a fixed VGA cable. I dug the cable out,
+and once again started trying to cut it open. I think the stuff over this one was even more annoying.
+But I made it, and what I saw, I don't know if I had ever seen before.
+
+![A metal shield soldered around the entire back of a VGA plug, and crimped on the cable. There are bits of blue plastic around it.](./img/tomb-1.webp)
+
+Oh my fucking god. Not only was this going to be hell, it was also covered in some sort of greasy
+[Universal Surface Schmoo](https://youtu.be/bomUYpEEgtw?t=220).
+
+But I persevered, and using a combination of tools, including but not limited to: soldering iron, lighter,
+slightly dull scalpel, sidecutters, flat-head screwdriver, I somehow managed to Unseal this fucking Tomb.
+I hope I don't get a curse or something, holy shit.
+
+![The plug, now with the two halves of the shield off the connector and on the desk, among a whole bunch of other junk. The back of the plug is potted in some kind of hot glue-like stuff. There's also a black piece of plastic directly behind the connector.](./img/tomb-2.webp)
+
+Behold.
+
+Also yes, the spots where the wires were crimped? soldered? was hidden by that black plastic piece, and I tried slicing
+away the hot glue-like Substance holding them together, but it wasn't long before I sliced some of the cables.
+This time it was actually toast, so I gave up. But it was at this moment that I also realized I had been looking
+at the previous plug from the wrong side, because the pinout on Wikipedia shows the receptacle.
+
+![A VGA plug seen from the front. Three pins, 6, 7 and 8 are missing.](./img/brit-1.webp)
+
+Pardon the horrible picture, but all of the missing pins were actually related to the actual RGB signals, which I don't need.
+
+I pulled the other pins I didn't need out and wired up a doohickey:
+
+![A goldpin header soldered directly to the pins of the VGA plug, seen from the bottom. The two data pins of note are wired to the leftmost pin and rightmost pin of the bottom row respectively.](./img/brit-2.webp)
+
+I put a little sliver of kapton tape over the sensor, and soldered the goldpins on:
+
+![The back of the little SHT31 breakout board, with the goldpins soldered parallel to (flat against) the board.](./img/sht31.webp)
+
+(I soldered them on like this so I could then eventually glue the PCB to whatever is going to hold it and have the sensor stick out.)
+
+I excitedly wired it all together with jumper wires, and then:
+
+![The output of i2cdetect -y 2, showing no responses.](./img/fail.webp)
+
+Nothing. See if you can spot the mistake, because I did pretty quickly.
+
+I had wired up what was supposed to be SCL to pin 15 and not 14. No big deal, I thought.
+But as I was trying to fix it, the _correct_ pin just _had to_ break off. Shit, I might still be able to save it.
+And I try pushing the pin out, from the front, and then... the other side breaks off. I tried and tried to Surgically Extract
+the broken off pin, to no avail. I broke one of my fucking multimeter probes too.
+
+At this point I was tired and lowkey pissed off, so I thought it's prime time for a fucking
+
+[*SACRIFICE*]{style="font-size: 5em;"}.
+
+![A black VGA cable on the floor.](./img/sacrifice.webp)
+
+Chop. Oopsie daisy oh well. I have another one. (That one _is_ also stupidly long but whatever.)
+
+I quickly stripped the cable, cut the RGB and sync wires short, folded them back, and covered them along with the shielding
+with a piece of heat shrink tubing. I was left with four wires. Convenient.
+I quickly beeped them out with my multimeter and soldered them up to another header, this time in the same order
+as the SHT31 module, so I could plug it in directly. And the result was this:
+
+![A short VGA cable ending on one side in a 4-pin header into which the module is plugged in, as described, on the other side plugged into a motherboard.](./img/working.webp)
+
+Surprisingly tidy.
+
+## the linux side
+
+You could write your own code that just opens the bus device (`/dev/i2c-N`), does the appropriate ioctls and reads and writes,
+and it's not exactly hard on its own, but Linux actually has drivers for some I2C devices.
+Some of them it can automatically detect, but the proper way is to have either device tree entries for the devices
+or something ACPI something something, or from code. I'm not using a Raspberry Pi, and I don't exactly have access to the BIOS,
+not in this context anyways, nor to the kernel code, but there's a fourth way. And you can't just modprobe the driver,
+it needs to know what address to talk to (and there could be multiple devices using the same driver at the same time).
+Turns out, you can [instantiate devices from userspace](https://docs.kernel.org/i2c/instantiating-devices.html#method-4-instantiate-from-user-space)
+by doing more or less this incantation:
+
+```sh
+echo '<driver> <address>' > /sys/bus/i2c/devices/i2c-N/new_device
+```
+
+By default, the SHT31 has address 0x44:
+
+![The output of i2cdetect -y 2 showing address 0x44 responds.](./img/epic-win-1.webp)
+
+...and the driver is called sht3x, so I had to write `sht3x 0x44`.
+After I did that, a new directory appeared under `/sys/class/hwmon`,
+and I could directly read out the current temperature and humidity:
+
+![The command cat /sys/class/hwmon/hwmon2/{temp1_input,humidity1_input} resulting in two numbers: 21004 and 46414.](./img/epic-win-2.webp)
+
+That's in 1/1000ths °C and 1/1000ths %RH. Success!!
+
+TODO: the rest of the owl. It's midnight. Stay tuned.

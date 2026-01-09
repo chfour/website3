@@ -51,7 +51,10 @@ body {
 a { color: var(--color-link); }
 a:visited { color: var(--color-link-visited); }
 
-img { display: block; }
+img {
+    display: block;
+    max-width: 100%;
+}
 
 #fops { filter: drop-shadow(0 0 5px #ccc); }
 @media (prefers-color-scheme: dark) {
@@ -108,8 +111,10 @@ h1 {
     padding: 0.2rem 0.4rem;
 }
 
-.tag[data-tag='test'] { --bg: #f66151; --fg: #000; }
+.tag[data-tag='test']     { --bg: #f66151; --fg: #000; }
 .tag[data-tag='software'] { --bg: #8ff0a4; --fg: #000; }
+.tag[data-tag='hardware'] { --bg: #dc8add; --fg: #000; }
+.tag[data-tag='weather']  { --bg: #99c1f1; --fg: #000; }
 
 pre {
     padding: 1rem;

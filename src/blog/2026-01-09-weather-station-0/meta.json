@@ -1,0 +1,10 @@
+{
+    "title": "making a weather station part 0: The Computer & wiring a sensor up to a VGA port",
+    "date": "2026-01-09",
+    "tags": ["software", "hardware", "weather"],
+    "keywords": [
+        "ddc", "vga", "i2c", "sht3x", "sht30", "sht31", "linux", "i2c-dev",
+        "sensor", "weather station", "arduino", "raspberry pi", "diy",
+        "intel", "desktop board", "d525mw", "atom"
+    ]
+}
